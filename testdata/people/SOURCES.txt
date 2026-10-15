@@ -1,0 +1,22 @@
+Public-domain photographs from Wikimedia Commons, used as face fixtures.
+
+albert-einstein.jpg
+  File:Albert_Einstein_Head.jpg
+  Photograph by Orren Jack Turner, 1947. Public domain.
+  https://commons.wikimedia.org/wiki/File:Albert_Einstein_Head.jpg
+
+albert-einstein-again.jpg
+  The same photograph, cropped and brightened. It must stay the same person.
+
+abraham-lincoln.jpg
+  File:Abraham_Lincoln_O-77_matte_collodion_print.jpg
+  Photograph by Alexander Gardner, 1863. Public domain.
+  https://commons.wikimedia.org/wiki/File:Abraham_Lincoln_O-77_matte_collodion_print.jpg
+
+marie-curie.jpg
+  File:Marie_Curie_c._1920s.jpg
+  Photograph by Henri Manuel, c. 1920s. Public domain.
+  https://commons.wikimedia.org/wiki/File:Marie_Curie_c._1920s.jpg
+
+no-person.jpg
+  Generated sky and ground. It must not be classified as a person.

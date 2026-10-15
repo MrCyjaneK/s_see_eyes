@@ -1,0 +1,14 @@
+_SPACESEE_eyes_load
+_SPACESEE_eyes_loadError
+_SPACESEE_eyes_unload
+_SPACESEE_eyes_isHeavy
+_SPACESEE_eyes_assetCount
+_SPACESEE_eyes_asset
+_SPACESEE_eyes_version
+_SPACESEE_eyes_extension
+_SPACESEE_eyes_filetypes
+_SPACESEE_eyes_maxInputSize
+_SPACESEE_eyes_analyze
+_SPACESEE_eyes_progress
+_SPACESEE_eyes_progressString
+_SPACESEE_eyes_free
