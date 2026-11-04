@@ -41,7 +41,7 @@ def write_manifest(models: Path, manifest: Path) -> None:
         files.append({"name": name, "sha256": sha256_file(path), "size": path.stat().st_size})
     manifest.parent.mkdir(parents=True, exist_ok=True)
     manifest.write_text(
-        json.dumps({"module": "eyes", "version": "1.0.0", "files": files}, indent=2) + "\n"
+        json.dumps({"module": "eyes", "version": "2.0.0", "files": files}, indent=2) + "\n"
     )
     print(f"[+] wrote {manifest} ({len(files)} files)")
 

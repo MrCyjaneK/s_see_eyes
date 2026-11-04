@@ -57,7 +57,7 @@ extern "C" const char* SPACESEE_eyes_asset(int index) {
   return dup_cstr(s);
 }
 
-extern "C" const char* SPACESEE_eyes_version(void) { return dup_cstr("1.0.0"); }
+extern "C" const char* SPACESEE_eyes_version(void) { return dup_cstr("2.0.0"); }
 
 extern "C" const char* SPACESEE_eyes_extension(void) { return dup_cstr("json"); }
 

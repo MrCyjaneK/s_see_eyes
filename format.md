@@ -154,3 +154,9 @@
 `personId` is the `id` of the first face in that cluster. A new face joins a stored face when cosine similarity is at least 0.45, comparing against every face already in the gallery, and keeps that person's id. The data directory is the module directory inside the synced `.space` folder, so another device analyzing a later photo uses the same gallery.
 
 Detections without a data directory omit `id` and `personId`.
+
+Module version `2.0.0` is the generation that fills `personId`. The JSON shape is unchanged from `1.0.0`. A `1.0.0` sidecar stays readable.
+
+`<id>.person` is the live assignment: one line, the 64-character id of a face in the cluster. A face with no match uses its own id. Analysis writes `<id>.person` only when that file is absent, so a later rewrite is kept. A line that is not 64 characters is ignored and the face is its own person. The JSON sidecar copies `id` and `personId` at analysis time and is not rewritten when `<id>.person` changes. After that change, `<id>.person` is the assignment. A running analysis keeps the assignment it already loaded; the next start reads the file again.
+
+A display name is not part of this JSON. It belongs in a separate synced record keyed by person id, for example `people/<personId>` beside `faces/`.

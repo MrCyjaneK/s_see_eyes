@@ -41,9 +41,8 @@ struct Entry {
 
 struct Cache {
   std::string dir;
-  int count = -1;
-  std::filesystem::file_time_type newest{};
-  bool have_newest = false;
+  bool have_mtime = false;
+  std::filesystem::file_time_type dir_mtime{};
   std::vector<Entry> entries;
 };
 
@@ -226,27 +225,17 @@ bool face_file(const fs::path& p) {
   return name.size() == 68 && name.ends_with(".bin");
 }
 
-struct Stamp {
-  int count = 0;
-  fs::file_time_type newest{};
-  bool have_newest = false;
-};
-
-Stamp scan_stamp(const fs::path& dir) {
-  Stamp s;
+bool directory_mtime(const fs::path& dir, fs::file_time_type& out) {
   std::error_code ec;
-  for (const auto& ent : fs::directory_iterator(dir, ec)) {
-    if (ec || !ent.is_regular_file()) continue;
-    if (!face_file(ent.path())) continue;
-    ++s.count;
-    auto t = ent.last_write_time(ec);
-    if (ec) continue;
-    if (!s.have_newest || t > s.newest) {
-      s.newest = t;
-      s.have_newest = true;
-    }
-  }
-  return s;
+  auto t = fs::last_write_time(dir, ec);
+  if (ec) return false;
+  out = t;
+  return true;
+}
+
+void remember_mtime(const fs::path& dir) {
+  gallery.dir = dir.string();
+  gallery.have_mtime = directory_mtime(dir, gallery.dir_mtime);
 }
 
 float cosine(const Entry& a, const Entry& b) {
@@ -288,9 +277,7 @@ void load_gallery(const fs::path& dir) {
   gallery.entries.clear();
   std::error_code ec;
   if (!fs::is_directory(dir, ec)) {
-    gallery.dir = dir.string();
-    gallery.count = 0;
-    gallery.have_newest = false;
+    remember_mtime(dir);
     return;
   }
   for (const auto& ent : fs::directory_iterator(dir, ec)) {
@@ -299,18 +286,13 @@ void load_gallery(const fs::path& dir) {
     if (!load_entry(ent.path(), e)) continue;
     gallery.entries.push_back(std::move(e));
   }
-  auto stamp = scan_stamp(dir);
-  gallery.dir = dir.string();
-  gallery.count = stamp.count;
-  gallery.newest = stamp.newest;
-  gallery.have_newest = stamp.have_newest;
+  remember_mtime(dir);
 }
 
 void ensure_gallery(const fs::path& dir) {
-  auto stamp = scan_stamp(dir);
-  if (gallery.dir == dir.string() && gallery.count == stamp.count &&
-      gallery.have_newest == stamp.have_newest &&
-      (!stamp.have_newest || gallery.newest == stamp.newest)) {
+  fs::file_time_type mtime{};
+  bool have = directory_mtime(dir, mtime);
+  if (gallery.dir == dir.string() && gallery.have_mtime == have && (!have || gallery.dir_mtime == mtime)) {
     return;
   }
   load_gallery(dir);
@@ -408,13 +390,7 @@ std::string identify_faces(const RGBImage& img, std::vector<FaceBox>& faces, con
     gallery.entries.push_back(std::move(f.entry));
     wrote = true;
   }
-  if (wrote) {
-    auto stamp = scan_stamp(dir);
-    gallery.dir = dir.string();
-    gallery.count = stamp.count;
-    gallery.newest = stamp.newest;
-    gallery.have_newest = stamp.have_newest;
-  }
+  if (wrote) remember_mtime(dir);
   return "";
 }
 
